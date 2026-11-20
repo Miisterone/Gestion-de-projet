@@ -30,5 +30,25 @@ body:
     id: criteria
     attributes:
       label: Critères d'acceptation
+      description: Un critère par règle produit, au format Étant donné / Quand / Alors (voir la Definition of Ready dans CONTRIBUTING.md).
       value: |
-        - [ ] 
+        - [ ] Étant donné … quand … alors …
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: Cas d'erreur attendus
+      description: Situation et code du catalogue (ERRORS.md), ou « nouveau code à créer ».
+      value: |
+        - … → `LL_…`
+  - type: textarea
+    id: render
+    attributes:
+      label: Rendu attendu en 800×600
+      description: Tâche front uniquement. Maquette, capture ou description de l'écran de Gérard (800×600, sans défilement horizontal).
+  - type: textarea
+    id: blocked
+    attributes:
+      label: Dépendances
+      description: Issues qui doivent être faites avant. Les ajouter aussi en lien Blocked by, et les retirer quand elles ne sont plus vraies.

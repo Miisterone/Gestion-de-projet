@@ -26,8 +26,18 @@ body:
     id: criteria
     attributes:
       label: Critères d'acceptation
+      description: Un critère par règle produit, au format Étant donné / Quand / Alors (voir la Definition of Ready dans CONTRIBUTING.md).
       value: |
-        - [ ] 
+        - [ ] Étant donné … quand … alors …
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: Cas d'erreur attendus
+      description: Situation et code du catalogue (ERRORS.md), ou « nouveau code à créer ».
+      value: |
+        - … → `LL_…`
   - type: markdown
     attributes:
       value: Après création, ajouter les tâches front et back avec **Create sub-issue**.

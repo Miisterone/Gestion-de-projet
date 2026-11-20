@@ -20,10 +20,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: API documentation is up to date
+      - name: API documentation and error catalogue are up to date
         run: |
           npm run docs
-          git diff --exit-code docs/API.md || (echo "::error::Run 'npm run docs' and commit docs/API.md" && exit 1)
+          git diff --exit-code docs/API.md ERRORS.md || (echo "::error::Run 'npm run docs' and commit docs/API.md and ERRORS.md" && exit 1)
 
   test:
     runs-on: ubuntu-latest
