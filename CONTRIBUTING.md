@@ -98,10 +98,10 @@ En review :
 
 ## 📖 Documenter une route (Swagger)
 
-Swagger (`/api/docs`) est généré par [backend/lib/openapi.js](backend/lib/openapi.js) à partir des schémas Zod.
+Swagger (`/api/docs`) est généré par [backend/lib/openapi/](backend/lib/openapi/) à partir des schémas Zod. Schémas et doc ont **un fichier par ressource** (`posts.js`, `events.js`...) : deux US en parallèle ne modifient pas le même fichier.
 
-1. Écrire le schéma Zod dans `backend/lib/schemas.js`. Il sert à la fois à la validation et à la doc.
-2. Ajouter `route({ method, path, tags, summary, request, responses, codes })` dans `openapi.js`. `codes` liste les erreurs possibles du [catalogue](ERRORS.md).
+1. Écrire le schéma Zod dans `backend/lib/schemas/<ressource>.js`. Il sert à la fois à la validation et à la doc. Pour une nouvelle ressource, ajouter son `export *` dans `schemas/index.js`.
+2. Ajouter `route({ method, path, tags, summary, request, responses, codes })` dans `backend/lib/openapi/<ressource>.js`. `codes` liste les erreurs possibles du [catalogue](ERRORS.md). Pour une nouvelle ressource, l'importer dans `openapi/index.js`.
 3. Lancer `npm run docs` puis `npm test`. Un test échoue si une route n'est pas documentée.
 
 ## 🎨 Storybook et 800×600

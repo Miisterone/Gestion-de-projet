@@ -79,11 +79,11 @@ export const POST = withErrorHandler(async (request) => {
 ```
 
 - Chaque route est enveloppée par `withErrorHandler` : il ajoute `X-Trace-Id`, convertit les `AppError` et masque les exceptions.
-- Les schémas Zod partagés sont dans `backend/lib/schemas.js`, avec des messages en français.
+- Les schémas Zod sont dans `backend/lib/schemas/`, un fichier par ressource, avec des messages en français.
 - Ne jamais renvoyer `Response.json({ error })` à la main.
 
 ## Ajouter un code
 
 1. L'ajouter dans `ERRORS` de `backend/lib/errors.js` (préfixe `LL_`, suffixe = statut HTTP).
 2. L'ajouter dans le tableau ci-dessus.
-3. Le documenter dans les réponses de la route : paramètre `codes` de `route()` dans `backend/lib/openapi.js` (visible sur `/api/docs`).
+3. Le documenter dans les réponses de la route : paramètre `codes` de `route()` dans le fichier de la ressource de `backend/lib/openapi/` (visible sur `/api/docs`).
