@@ -16,12 +16,12 @@ Pour installer le projet, voir le [README](README.md#-installation).
 
 ## 🔁 Cycle de vie d'une contribution
 
-1. **Prendre une issue** dans le [Project](https://github.com/users/Miisterone/projects/5) (colonne *À faire*), se l'assigner, la passer *En cours*. Noter son identifiant `LL-<id>` (dans le titre) et son numéro `#<n>`.
+1. **Prendre une issue** dans le [Project](https://github.com/users/Miisterone/projects/5) (colonne *À faire*), se l'assigner, la passer *En cours*. Noter son numéro `#<n>` (pour la branche et le `Closes #<n>`) et son identifiant `LL-<id>` (dans le titre, pour le titre de la PR).
 2. **Créer sa branche** depuis `develop` à jour :
    ```bash
    git checkout develop
    git pull
-   git checkout -b feature/LL-12-profile-page
+   git checkout -b feature/88-profile-page
    ```
 3. **Développer** en faisant des commits cohérents (voir [Commits](#-commits)).
 4. **Ouvrir une Pull Request** vers `develop` (voir [Pull Requests](#-pull-requests)).
@@ -38,10 +38,10 @@ Nous suivons **GitFlow**.
 |---|---|---|---|
 | `main` | Versions stables livrées, taguées | — | — |
 | `develop` | Intégration des développements | `main` à l'initialisation | — |
-| `feature/LL-<id>-<desc>` | Nouvelle fonctionnalité | `develop` | `develop` |
-| `fix/LL-<id>-<desc>` | Correction pendant le développement | `develop` | `develop` |
+| `feature/<n>-<desc>` | Nouvelle fonctionnalité | `develop` | `develop` |
+| `fix/<n>-<desc>` | Correction pendant le développement | `develop` | `develop` |
 | `release/x.y.z` | Stabilisation d'une version | `develop` | `main` **et** `develop` |
-| `hotfix/LL-<id>-<desc>` | Correction urgente en production | `main` | `main` **et** `develop` |
+| `hotfix/<n>-<desc>` | Correction urgente en production | `main` | `main` **et** `develop` |
 
 > `fix/*` est une convention complémentaire au GitFlow standard, propre à notre projet.
 
@@ -51,15 +51,15 @@ Nous suivons **GitFlow**.
 
 ### Nommage
 
-- `LL-<id>` = identifiant présent dans le titre de l'issue (ex. `LL-125 Créer le schéma PostgreSQL`).
+- `<n>` = numéro de l'issue dans le backlog (ex. `88` pour l'issue #88 *LL-142 Page profil*), sans `#` ni `LL-`.
 - `<desc>` : quelques mots **en anglais**, **en minuscules**, séparés par des **tirets**.
 
-> ⚠️ Le workflow **`PR check`** refuse toute branche `feature/`, `fix/` ou `hotfix/` sans identifiant `LL-<id>` : créer d'abord l'issue, même pour une petite correction de CI ou de doc.
+> ⚠️ Le workflow **`PR check`** refuse toute branche `feature/`, `fix/` ou `hotfix/` sans numéro d'issue : créer d'abord l'issue, même pour une petite correction de CI ou de doc.
 
 ```text
-feature/LL-12-profile-page
-fix/LL-27-feed-pagination
-hotfix/LL-31-login-crash
+feature/88-profile-page
+fix/85-feed-duplicates
+hotfix/31-login-crash
 release/1.0.0
 ```
 
@@ -199,7 +199,7 @@ Tant que le MVP n'est pas livré, les versions sont en `0.x.y`. Le MVP sera la `
 
 ## 🚑 Correctif urgent (hotfix)
 
-1. Créer `hotfix/LL-<id>-<desc>` depuis `main`.
+1. Créer `hotfix/<n>-<desc>` depuis `main`.
 2. Corriger, ouvrir une PR vers `main`.
 3. Après fusion, taguer une version **CORRECTIF** (ex. `v1.0.1`).
 4. Reporter le correctif dans `develop` et, si besoin, dans la `release/*` en cours.

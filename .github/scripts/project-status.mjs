@@ -1,6 +1,6 @@
 // Updates the "Status" of the issue linked to the branch:
-//   feature/LL-125-xxx -> issue whose title contains LL-125
-//   feature/12-xxx     -> issue #12
+//   feature/12-xxx     -> issue #12 (format required by PR check)
+//   feature/LL-125-xxx -> issue whose title contains LL-125 (old branches)
 // in the GitHub Project (https://github.com/users/Miisterone/projects/5).
 const { PROJECT_TOKEN, PROJECT_OWNER, PROJECT_NUMBER, REPOSITORY, BRANCH, STATUS } = process.env;
 
