@@ -10,6 +10,7 @@ De la prise d'une issue à la fusion de la PR. Pour installer le projet, voir le
 4. Ouvrir une PR vers `develop`, avec `Closes #<n>` dans la description.
 5. Obtenir 1 review approuvée et une CI verte, puis faire un **squash and merge** et supprimer la branche.
 
+**Tenir le Project à jour.** Avant de commencer, **s'assigner l'issue** et la passer de *Todo* à *In Progress* à la main : c'est ce qui montre à l'équipe qui travaille sur quoi. La suite est automatique (*In Review* à l'ouverture de la PR, *To Test* à la fusion, *Done* à la fermeture de l'issue). Si la review demande des changements ou si la recette est KO, repasser l'issue en *In Progress*. Le détail des statuts est dans le [README](README.md#-workflow-des-tickets).
 **Une issue = une branche = une PR.** On travaille sur les tâches (sous-issues), pas sur l'US entière : chaque tâche a sa PR, et l'US est terminée quand toutes ses tâches sont fusionnées. Le squash transforme la PR en un seul commit sur `develop` : les commits à l'intérieur de la PR sont libres.
 
 **Une US en cours par personne.** On finit et on fait fusionner ses PR avant d'en commencer une autre. Les petites PR sont relues et fusionnées vite, pour limiter les conflits entre US en parallèle.
@@ -111,6 +112,21 @@ En review :
 **Sprint planning.** On relit les liens *Blocked by* des issues choisies et on retire ceux qui ne sont plus vrais. Une issue bloquée par une issue qui n'est pas dans le sprint n'entre pas dans le sprint.
 
 **Changer une règle** (convention, CI, modèle de PR...) : la PR est annoncée à toute l'équipe avant sa fusion, et la règle s'applique au sprint suivant. Une règle qui casse la CI des PR en cours (nouvelle vérification) attend la fin du sprint, sauf correctif urgent.
+
+## 🤖 PR de Dependabot
+
+Dependabot ouvre ses PR (`chore: bump <paquet> from <a> to <b>`) sans issue : *PR check* ne les vérifie pas, et elles n'apparaissent pas dans le Project. Pour garder une trace dans le backlog, chaque PR Dependabot a une **issue de suivi** :
+
+1. Chercher une issue de suivi existante (label `dependencies`). Les PR qui touchent les mêmes paquets (`vitest` et `@vitest/*`, `vite` et `@vitejs/*`...) partagent **une seule issue**.
+2. Sinon, créer l'issue avec le modèle *Tâche* :
+   - ce que propose la PR (paquet, versions, fichiers touchés), et si c'est une version majeure ;
+   - si la CI de la PR échoue : le job, l'erreur et sa cause ;
+   - critères *Étant donné / Quand / Alors* (CI verte, `npm test` passe, l'application fonctionne comme avant, PR liées fusionnées ou fermées) ;
+   - cas d'erreur (`Aucun changement` en général) et dépendances.
+3. Labels `infra` et `dependencies`. Dans le Project : Status `Backlog`, Service `Infra`, Persona `Aucun`. Si le workflow *Project* n'a pas ajouté l'issue, l'ajouter à la main : `gh project item-add 5 --owner Miisterone --url <url de l'issue>`.
+4. Commenter la PR Dependabot avec le lien vers l'issue.
+
+Une PR Dependabot fusionnée ou fermée sans suite ferme son issue (avec un lien vers la PR). Si la montée demande du travail (code à adapter, autres paquets à monter), il se fait dans une branche `feature/<n>-<desc>` liée à l'issue, et la PR Dependabot est fermée.
 
 ## 📦 Versions
 
