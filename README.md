@@ -212,7 +212,7 @@ Toutes les automatisations sont des workflows GitHub Actions dans [.github/workf
 | Document | Contenu |
 |---|---|
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, Pull Requests, versions |
-| [docs/PERSONAS.md](docs/PERSONAS.md) | Nos 3 personas et leurs besoins |
+| [docs/PERSONAS.md](docs/PERSONAS.md) | Nos 4 personas, leurs besoins et les labels `persona:*` |
 | [docs/STORYMAP.md](docs/STORYMAP.md) | Parcours utilisateur et découpage en releases |
 | [docs/API.md](docs/API.md) | Routes de l'API (générée automatiquement) |
 | [Doc publiée](https://miisterone.github.io/Gestion-de-projet/) | Storybook et Swagger de `develop`, publiés par la CI (workflow *Docs site*) sur GitHub Pages |

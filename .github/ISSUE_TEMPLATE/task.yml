@@ -8,6 +8,18 @@ body:
       options: [frontend, backend, database, infra]
     validations:
       required: true
+  - type: dropdown
+    id: persona
+    attributes:
+      label: Persona
+      description: Persona(s) servi(s), voir docs/PERSONAS.md. Ajouter aussi le label persona:* correspondant.
+      multiple: true
+      options:
+        - Gérard (800×600, connexion lente)
+        - Inès (stats et badges)
+        - Chloé (vie privée)
+        - Karim (événements d'association)
+        - Aucun (tâche technique)
   - type: textarea
     id: description
     attributes:
