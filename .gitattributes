@@ -1,0 +1,4 @@
+# LF line endings in the repository and in every checkout, Windows included:
+# no CRLF warnings, and the scripts that read the files (npm run docs) see the same text everywhere.
+# Binary files are detected by "auto" and left untouched.
+* text=auto eol=lf
