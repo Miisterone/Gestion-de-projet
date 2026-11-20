@@ -1,0 +1,5 @@
+# Default owners for the whole repository
+* @Miisterone
+
+# CI, workflows and repo settings
+/.github/ @Miisterone
