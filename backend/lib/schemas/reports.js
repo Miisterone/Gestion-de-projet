@@ -6,7 +6,5 @@ export const REPORT_REASONS = ['abus', 'inapproprie', 'erronee', 'autre'];
 
 export const reportSchema = z.object({
   postId: z.string(required('La publication')).uuid('La publication est invalide.'),
-  reason: z.enum(REPORT_REASONS, {
-    errorMap: () => ({ message: 'Choisissez un motif de signalement.' }),
-  }),
+  reason: z.enum(REPORT_REASONS, { error: 'Choisissez un motif de signalement.' }),
 });

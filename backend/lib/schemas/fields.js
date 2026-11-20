@@ -1,9 +1,11 @@
 // Fields shared by the schemas of several resources
 import { z } from 'zod';
 
+const isMissing = (value) => value === undefined || value === null;
+
+// Message of a missing field or of a value of the wrong type
 export const required = (label) => ({
-  required_error: `${label} est obligatoire.`,
-  invalid_type_error: `${label} est invalide.`,
+  error: (issue) => (isMissing(issue.input) ? `${label} est obligatoire.` : `${label} est invalide.`),
 });
 
 export const name = (label) =>
@@ -21,6 +23,6 @@ export const text = (label, max) =>
     .max(max, `${label} ne doit pas dépasser ${max} caractères.`);
 
 export const zoneId = z
-  .number({ required_error: 'Choisissez votre quartier.', invalid_type_error: 'Choisissez votre quartier.' })
+  .number({ error: 'Choisissez votre quartier.' })
   .int('Choisissez votre quartier.')
   .positive('Choisissez votre quartier.');
