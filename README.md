@@ -99,7 +99,7 @@ flowchart LR
 | Statut | Qui | Déclencheur |
 |---|---|---|
 | **Backlog** | PO | Issue créée (ajoutée au Project automatiquement 🤖) |
-| **Todo** | Équipe | Choisie en sprint planning |
+| **Todo** | Équipe | Choisie en sprint planning, si elle respecte la [Definition of Ready](CONTRIBUTING.md#-sprint) |
 | **In Progress** | Dev | Branche `feature/<n>-<desc>` créée |
 | **In Review** | 🤖 | PR ouverte vers `develop` |
 | **To Test** | 🤖 | PR fusionnée, recette par le PO |

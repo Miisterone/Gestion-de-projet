@@ -4,11 +4,15 @@ De la prise d'une issue à la fusion de la PR. Pour installer le projet, voir le
 
 ## 🔁 Cycle d'une contribution
 
-1. Prendre une issue *Todo* dans le [Project](https://github.com/users/Miisterone/projects/5), se l'assigner et la passer *In Progress*. Noter son numéro `#<n>` et son identifiant `LL-<id>`.
+1. Prendre une issue *Todo* dans le [Project](https://github.com/users/Miisterone/projects/5), se l'assigner et la passer *In Progress*. Noter son numéro `#<n>` et son identifiant `LL-<id>`. Une issue *Todo* est prête (voir [Definition of Ready](#-sprint)) : si ce n'est pas le cas, le signaler au PO avant de commencer.
 2. Créer la branche depuis `develop` à jour : `git switch develop && git pull && git switch -c feature/<n>-<desc>`.
 3. Commiter (voir [Commits](#-commits-et-titres-de-pr)).
 4. Ouvrir une PR vers `develop`, avec `Closes #<n>` dans la description.
 5. Obtenir 1 review approuvée et une CI verte, puis faire un **squash and merge** et supprimer la branche.
+
+**Une issue = une branche = une PR.** On travaille sur les tâches (sous-issues), pas sur l'US entière : chaque tâche a sa PR, et l'US est terminée quand toutes ses tâches sont fusionnées. Le squash transforme la PR en un seul commit sur `develop` : les commits à l'intérieur de la PR sont libres.
+
+**Une US en cours par personne.** On finit et on fait fusionner ses PR avant d'en commencer une autre. Les petites PR sont relues et fusionnées vite, pour limiter les conflits entre US en parallèle.
 
 ## 🌿 Branches (GitFlow)
 
@@ -24,6 +28,22 @@ De la prise d'une issue à la fusion de la PR. Pour installer le projet, voir le
 - `main` et `develop` sont protégées : on passe toujours par une PR.
 - `<n>` est le **numéro de l'issue** (`88` pour #88), sans `#` ni `LL-`. Il est obligatoire, car le workflow *Project* s'en sert pour déplacer la carte. Il faut donc une issue même pour une petite correction.
 - `<desc>` : quelques mots en anglais, en minuscules, séparés par des tirets (`feature/88-profile-page`).
+
+## 🍴 Travailler depuis un fork
+
+Sans droit d'écriture sur le dépôt, on pousse ses branches sur son fork. Les règles de branche, de titre et de PR sont les mêmes.
+
+```bash
+gh repo fork Miisterone/Gestion-de-projet --clone   # origin = le fork, upstream = le dépôt
+git switch -c feature/<n>-<desc> upstream/develop
+git push -u origin feature/<n>-<desc>
+gh pr create --repo Miisterone/Gestion-de-projet --base develop --head <compte>:feature/<n>-<desc>
+```
+
+- `--head <compte>:<branche>` est obligatoire, sinon `gh pr create` cherche la branche dans le dépôt.
+- Mettre sa branche à jour depuis `upstream/develop` (`git fetch upstream && git rebase upstream/develop`), pas depuis le `develop` du fork.
+- Pour un premier contributeur, GitHub attend qu'un mainteneur clique sur **Approve and run workflows** avant de lancer la CI. Le signaler dans la PR si la CI ne démarre pas.
+- *PR check* (nom de branche, titre, labels) utilise `pull_request_target` : il fonctionne aussi sur les PR venant d'un fork.
 
 ## 📝 Commits et titres de PR
 
@@ -78,6 +98,19 @@ En review :
 - pointer la ligne et proposer une solution ;
 - commenter le code, pas la personne ;
 - préfixer par `nit:` ce qui n'est pas bloquant.
+
+## 🏃 Sprint
+
+**Definition of Ready.** Une issue passe en *Todo* au sprint planning seulement si elle a :
+
+- des critères d'acceptation au format *Étant donné / Quand / Alors*, qui tranchent les règles produit (qui peut faire quoi, combien de fois, que se passe-t-il pour un compte incomplet...) ;
+- les cas d'erreur attendus, avec leur code du [catalogue](ERRORS.md) ou « nouveau code à créer » ;
+- pour une tâche front, le rendu attendu en 800×600 (maquette, capture ou description) ;
+- des liens *Blocked by* vrais : chaque bloqueur est fait, ou prévu avant dans le même sprint.
+
+**Sprint planning.** On relit les liens *Blocked by* des issues choisies et on retire ceux qui ne sont plus vrais. Une issue bloquée par une issue qui n'est pas dans le sprint n'entre pas dans le sprint.
+
+**Changer une règle** (convention, CI, modèle de PR...) : la PR est annoncée à toute l'équipe avant sa fusion, et la règle s'applique au sprint suivant. Une règle qui casse la CI des PR en cours (nouvelle vérification) attend la fin du sprint, sauf correctif urgent.
 
 ## 📦 Versions
 
