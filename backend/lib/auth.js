@@ -44,12 +44,11 @@ export function requireUser(request) {
   return userId;
 }
 
-// Fields of a user that can be sent to the client (never the password)
+// Fields of a user that any logged user can see (never the password nor the email)
 export const publicUserSelect = {
   id: true,
   firstName: true,
   lastName: true,
-  email: true,
   bio: true,
   avatar: true,
   // Only the neighbourhood is public, never an address
@@ -57,6 +56,13 @@ export const publicUserSelect = {
   zone: { select: { id: true, name: true, city: true } },
   createdAt: true,
 };
+
+// Fields of their own account sent to the logged user: the public fields and the email
+export const ownUserSelect = { ...publicUserSelect, email: true };
+
+export function findOwnUser(id) {
+  return prisma.user.findUnique({ where: { id }, select: ownUserSelect });
+}
 
 export function findPublicUser(id) {
   return prisma.user.findUnique({ where: { id }, select: publicUserSelect });

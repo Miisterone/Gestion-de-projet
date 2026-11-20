@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { createToken, publicUserSelect } from '@/lib/auth';
+import { createToken, ownUserSelect } from '@/lib/auth';
 import { AppError } from '@/lib/errors';
 import { withErrorHandler } from '@/lib/handler';
 import { isUniqueViolation, prisma } from '@/lib/prisma';
@@ -20,7 +20,7 @@ export const POST = withErrorHandler(async (request) => {
   try {
     const user = await prisma.user.create({
       data: { firstName, lastName, email, password: await bcrypt.hash(password, 10), zoneId },
-      select: publicUserSelect,
+      select: ownUserSelect,
     });
     return Response.json({ token: createToken(user), user }, { status: 201 });
   } catch (error) {

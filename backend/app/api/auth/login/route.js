@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { createToken, findPublicUser } from '@/lib/auth';
+import { createToken, findOwnUser } from '@/lib/auth';
 import { AppError } from '@/lib/errors';
 import { withErrorHandler } from '@/lib/handler';
 import { prisma } from '@/lib/prisma';
@@ -16,5 +16,5 @@ export const POST = withErrorHandler(async (request) => {
     throw new AppError('LL_LOGIN_401');
   }
 
-  return Response.json({ token: createToken(user), user: await findPublicUser(user.id) });
+  return Response.json({ token: createToken(user), user: await findOwnUser(user.id) });
 });

@@ -42,7 +42,6 @@ const User = registry.register(
     id,
     firstName: z.string(),
     lastName: z.string(),
-    email: z.string().email(),
     bio: z.string(),
     avatar: z.string(),
     zoneId: z.number().int().nullable().openapi({ description: 'Quartier choisi (null pour les anciens comptes)' }),
@@ -50,6 +49,9 @@ const User = registry.register(
     createdAt: date,
   })
 );
+
+// The logged user's own account: the public profile and the email
+const OwnUser = registry.register('OwnUser', User.extend({ email: z.string().email() }));
 
 const Post = registry.register(
   'Post',
@@ -107,7 +109,7 @@ const Stats = registry.register(
   })
 );
 
-const Auth = z.object({ token: z.string(), user: User });
+const Auth = z.object({ token: z.string(), user: OwnUser });
 const Message = z.object({ message: z.string() });
 
 const Problem = registry.register(
@@ -228,7 +230,7 @@ route({
   path: '/api/auth/me',
   tags: ['Authentification'],
   summary: "L'utilisateur connecté",
-  responses: { 200: ok(z.object({ user: User })) },
+  responses: { 200: ok(z.object({ user: OwnUser })) },
 });
 
 route({
@@ -334,7 +336,7 @@ route({
   tags: ['Utilisateurs'],
   summary: 'Modifier mon profil',
   request: body(profileSchema),
-  responses: { 200: ok(z.object({ user: User })) },
+  responses: { 200: ok(z.object({ user: OwnUser })) },
   codes: ['LL_VALIDATION_422'],
 });
 
