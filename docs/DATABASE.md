@@ -14,9 +14,9 @@ L'accès à la base passe par **Prisma 7** (`@prisma/client` avec l'adaptateur `
 | Client partagé par les routes | `backend/lib/prisma.js` (`import { prisma } from '@/lib/prisma'`) |
 | Données de démonstration | `backend/prisma/seed.js` |
 
-Pourquoi Prisma : schéma déclaratif lisible par toute l'équipe, client généré avec autocomplétion, migrations générées et appliquées par la même commande, et Prisma Studio (`npm run db:studio -w backend`) pour consulter les données. Les noms des modèles sont en anglais et en camelCase côté code (`User.firstName`), et en snake_case côté base (`users.first_name`, via `@map` et `@@map`).
+Conventions de nommage : modèles en anglais et en camelCase dans le code (`User.firstName`), snake_case dans la base (`users.first_name`, via `@map` / `@@map`).
 
-Le client est généré automatiquement après `npm install` (`postinstall`). Après une modification du schéma sans nouvelle installation, lancer `npx prisma generate` dans `backend/`.
+Le client est régénéré par `npm install` (`postinstall`). Si le schéma change sans réinstallation, lancer `npx prisma generate` dans `backend/`.
 
 ## Modèle conceptuel
 
@@ -67,7 +67,7 @@ Aucune adresse n'est stockée (RGPD, persona Chloé) : seul le quartier est conn
 | Colonne | Type | Contraintes | Description |
 |---|---|---|---|
 | id | uuid | PK | Identifiant |
-| author_id | uuid | FK users, cascade | Auteur |
+| author_id | uuid | FK users, cascade, indexé | Auteur |
 | content | text | non nul | Texte de la publication |
 | created_at | timestamptz | non nul, indexé | Date de publication |
 
@@ -118,8 +118,6 @@ Index sur (zone_id, starts_at) : la liste d'un quartier ne montre que les évén
 
 Unicité sur (post_id, reporter_id) : un utilisateur ne signale qu'une fois la même publication (`LL_REPORT_409` sinon). Le traitement des signalements (statut, rôle modérateur) arrive avec la modération (LL-225).
 
-> Le module Amis a été retiré (LL-235) et les notifications sont reportées en V2 : les tables `friend_requests` et `notifications` sont supprimées par la migration `remove_friends_notifications`.
-
 ## Modifier le schéma
 
 1. Modifier `backend/prisma/schema.prisma`.
@@ -127,6 +125,4 @@ Unicité sur (post_id, reporter_id) : un utilisateur ne signale qu'une fois la m
 3. Relire le fichier `migration.sql` créé dans `backend/prisma/migrations`.
 4. Commiter le schéma **et** la migration dans le même commit (`feat(database): ...`).
 
-En CI, dans le conteneur et pour les bases de test, les migrations sont appliquées par `npm run db:migrate -w backend` (`prisma migrate deploy`), qui ne crée jamais de migration.
-
-Une migration déjà fusionnée dans `develop` ne se modifie plus : on en crée une nouvelle.
+Ailleurs (CI, conteneur, bases de test), les migrations sont appliquées par `prisma migrate deploy`, qui n'en crée jamais. Une migration fusionnée dans `develop` ne se modifie plus : on en crée une nouvelle.
