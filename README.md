@@ -33,7 +33,7 @@ Projet de groupe : concevoir **LocalLoop**, un réseau social local centré sur 
 
 La gestion de projet se fait sur **[GitHub Projects](https://github.com/users/Miisterone/projects/5)** : chaque ticket est une **issue** du dépôt. Une EPIC est une issue (label `epic`) dont les tâches front et back sont des **sous-issues**. Chaque issue a un identifiant **`LL-<id>`** dans son titre, repris dans le titre des PR ; le nom des branches reprend le **numéro de l'issue**. Le champ **Sprint** du Project range les issues par sprint, les dépendances sont des liens *Blocked by* entre issues.
 
-Colonnes du board (champ **Status**) : **Backlog → À faire → En cours → En review → À tester → Terminé**.
+Colonnes du board (champ **Status**) : **Backlog → Todo → In Progress → In Review → To Test → Done**.
 
 ## ✨ Fonctionnalités
 
@@ -165,7 +165,7 @@ gitGraph
 
 ```mermaid
 flowchart LR
-    A[Backlog] --> B[À faire] --> C[En cours] --> D[En review] --> E[À tester] --> F[Terminé]
+    A[Backlog] --> B[Todo] --> C[In Progress] --> D[In Review] --> E[To Test] --> F[Done]
     D -. changements demandés .-> C
     E -. recette KO .-> C
 ```
@@ -173,11 +173,11 @@ flowchart LR
 | Statut | Qui | Action |
 |---|---|---|
 | **Backlog** | PO | Crée le ticket, le rattache à son EPIC |
-| **À faire** | Équipe | Ticket choisi en sprint planning |
-| **En cours** | Dev | Crée sa branche `feature/<n>-<desc>` (`<n>` = numéro de l'issue) |
-| **En review** | Dev | Ouvre la PR vers `develop` 🤖 |
-| **À tester** | PO | PR fusionnée, le PO vérifie 🤖 |
-| **Terminé** | PO | Validé |
+| **Todo** | Équipe | Ticket choisi en sprint planning |
+| **In Progress** | Dev | Crée sa branche `feature/<n>-<desc>` (`<n>` = numéro de l'issue) |
+| **In Review** | Dev | Ouvre la PR vers `develop` 🤖 |
+| **To Test** | PO | PR fusionnée, le PO vérifie 🤖 |
+| **Done** | PO | Validé |
 
 🤖 = statut mis à jour automatiquement par GitHub Actions.
 
@@ -189,7 +189,7 @@ Toutes les automatisations sont des workflows GitHub Actions dans [.github/workf
 |---|---|---|
 | [CI](.github/workflows/ci.yml) | Chaque PR et push sur `main` / `develop` | Vérifie que la doc de l'API est à jour |
 | [PR check](.github/workflows/pr-check.yml) | Ouverture / modification d'une PR | Vérifie le nom de la branche et le titre (Conventional Commits), ajoute les labels `frontend` / `backend` / `infra` / `documentation` |
-| [Project](.github/workflows/project.yml) | Issue créée, PR ouverte / mergée | Ajoute l'issue au Project, puis passe l'issue dont le numéro est dans la branche en **En review** puis **À tester** |
+| [Project](.github/workflows/project.yml) | Issue créée, PR ouverte / mergée | Ajoute l'issue au Project, puis passe l'issue dont le numéro est dans la branche en **In Review** puis **To Test** |
 | [Docker](.github/workflows/docker.yml) | Push sur `main` / `develop` ou tag `v*` | Build les images front et back et les publie sur GitHub Container Registry (tag `recette` et environnement GitHub *recette* sur `develop`) |
 | [Release](.github/workflows/release.yml) | Tag `v*` | Crée la release GitHub avec la liste des PR, classées par label |
 | [Dependabot](.github/dependabot.yml) | Chaque semaine | Ouvre des PR pour mettre à jour les dépendances |
@@ -205,7 +205,7 @@ Toutes les automatisations sont des workflows GitHub Actions dans [.github/workf
 
 **Documentation automatique :** `npm run docs` lit les routes de `backend/app/api` et génère [docs/API.md](docs/API.md). La CI échoue si la doc n'a pas été régénérée après un changement d'API. Les notes de version sont générées à chaque release.
 
-**Configuration GitHub Project** (une seule fois) : créer un token *classic* avec les scopes `repo` et `project`, l'ajouter dans *Settings → Secrets and variables → Actions* sous le nom `PROJECT_TOKEN`. Dans le Project, le champ **Status** doit contenir les options `Backlog`, `À faire`, `En cours`, `En review`, `À tester`, `Terminé` ; activer aussi le workflow intégré *Item closed → Terminé*. Le nom du champ est modifiable en haut de [project-status.mjs](.github/scripts/project-status.mjs).
+**Configuration GitHub Project** (une seule fois) : créer un token *classic* avec les scopes `repo` et `project`, l'ajouter dans *Settings → Secrets and variables → Actions* sous le nom `PROJECT_TOKEN`. Dans le Project, le champ **Status** doit contenir les options `Backlog`, `Todo`, `In Progress`, `In Review`, `To Test`, `Done` (noms exacts, utilisés par le workflow *Project*) ; activer aussi le workflow intégré *Item closed → Done*. Le nom du champ est modifiable en haut de [project-status.mjs](.github/scripts/project-status.mjs).
 
 ## 📚 Documentation
 

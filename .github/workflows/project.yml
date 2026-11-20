@@ -1,7 +1,7 @@
 name: Project
 
 # New issue -> added to the project
-# PR opened -> "En review", PR merged -> "À tester"
+# PR opened -> "In Review", PR merged -> "To Test"
 on:
   issues:
     types: [opened]
@@ -38,4 +38,4 @@ jobs:
           PROJECT_NUMBER: 5
           REPOSITORY: ${{ github.repository }}
           BRANCH: ${{ github.head_ref }}
-          STATUS: ${{ github.event.action == 'closed' && 'À tester' || 'En review' }}
+          STATUS: ${{ github.event.action == 'closed' && 'To Test' || 'In Review' }}
