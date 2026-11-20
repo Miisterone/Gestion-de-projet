@@ -14,7 +14,7 @@ Source : page « Personna » du Notion LocalLoop. Ce fichier fait référence po
 ## Utilisation dans la gestion de projet
 
 - Chaque EPIC et chaque user story indique le ou les personas qu'elle sert (champ **Persona** des modèles d'issue), et porte le label `persona:*` correspondant.
-- Dans le GitHub Project, filtrer par label (`label:persona:karim`) pour voir tout ce qui concerne un persona.
+- Dans le GitHub Project, le champ **Persona** (Gérard, Inès, Chloé, Karim, Plusieurs, Aucun) sert à grouper ou trier une vue. Une EPIC qui sert plusieurs personas prend la valeur « Plusieurs », et ses labels `persona:*` précisent lesquels. Pour voir tout ce qui concerne un persona, filtrer par label (`label:persona:karim`).
 - Une user story s'écrit du point de vue d'un persona : *En tant que Karim, je veux… afin de…*.
 - Les critères d'acceptation reprennent les contraintes de la section « Ce que ça implique » du persona (par exemple : rendu vérifié en 800×600 pour Gérard).
 
