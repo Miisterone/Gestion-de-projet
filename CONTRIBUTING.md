@@ -10,6 +10,7 @@ De la prise d'une issue à la fusion de la PR. Pour installer le projet, voir le
 4. Ouvrir une PR vers `develop`, avec `Closes #<n>` dans la description.
 5. Obtenir 1 review approuvée et une CI verte, puis faire un **squash and merge** et supprimer la branche.
 
+**Tenir le Project à jour.** Avant de commencer, **s'assigner l'issue** et la passer de *Todo* à *In Progress* à la main : c'est ce qui montre à l'équipe qui travaille sur quoi. La suite est automatique (*In Review* à l'ouverture de la PR, *To Test* à la fusion, *Done* à la fermeture de l'issue). Si la review demande des changements ou si la recette est KO, repasser l'issue en *In Progress*. Le détail des statuts est dans le [README](README.md#-workflow-des-tickets).
 **Une issue = une branche = une PR.** On travaille sur les tâches (sous-issues), pas sur l'US entière : chaque tâche a sa PR, et l'US est terminée quand toutes ses tâches sont fusionnées. Le squash transforme la PR en un seul commit sur `develop` : les commits à l'intérieur de la PR sont libres.
 
 **Une US en cours par personne.** On finit et on fait fusionner ses PR avant d'en commencer une autre. Les petites PR sont relues et fusionnées vite, pour limiter les conflits entre US en parallèle.
