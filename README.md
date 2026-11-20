@@ -99,7 +99,7 @@ flowchart LR
 | Statut | Qui | Déclencheur |
 |---|---|---|
 | **Backlog** | PO | Issue créée (ajoutée au Project automatiquement 🤖) |
-| **Todo** | Équipe | Choisie en sprint planning |
+| **Todo** | Équipe | Choisie en sprint planning, si elle respecte la [Definition of Ready](CONTRIBUTING.md#-sprint) |
 | **In Progress** | Dev | Branche `feature/<n>-<desc>` créée |
 | **In Review** | 🤖 | PR ouverte vers `develop` |
 | **To Test** | 🤖 | PR fusionnée, recette par le PO |
@@ -111,7 +111,7 @@ Branches, commits et PR : voir **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 | Workflow | Quand | Ce qu'il fait |
 |---|---|---|
-| [CI](.github/workflows/ci.yml) | PR, push sur `main` / `develop` | Doc de l'API à jour, tests Vitest, build Storybook, tests E2E |
+| [CI](.github/workflows/ci.yml) | PR, push sur `main` / `develop` | Doc de l'API et catalogue d'erreurs à jour, tests Vitest, build Storybook, tests E2E |
 | [PR check](.github/workflows/pr-check.yml) | PR ouverte ou modifiée | Vérifie le nom de branche et le titre, ajoute les labels `frontend` / `backend` / `infra` / `documentation` |
 | [Project](.github/workflows/project.yml) | Issue créée, PR ouverte / fusionnée | Ajoute l'issue au Project, met à jour son statut grâce au numéro dans la branche |
 | [Docker](.github/workflows/docker.yml) | Push sur `main` / `develop`, tag `v*` | Publie les images sur GHCR : `recette` pour `develop`, `latest` pour `main`, version pour les tags |

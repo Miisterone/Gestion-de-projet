@@ -31,9 +31,8 @@ export const POST = withErrorHandler(async (request) => {
 
   // The event belongs to the neighbourhood of its author: the client cannot choose another one
   const zoneId = await findUserZoneId(userId);
-  if (!zoneId) {
-    throw new AppError('LL_ZONE_404', { detail: "Votre compte n'est rattaché à aucun quartier." });
-  }
+  // Not a missing resource but a state of the account: the front links to the profile
+  if (!zoneId) throw new AppError('LL_PROFILE_ZONE_409');
 
   const event = await createEvent({ authorId: userId, zoneId, title, description, place, startsAt: new Date(startsAt) });
 

@@ -1,6 +1,8 @@
-// Generates docs/API.md from the API routes of the backend
+// Generates docs/API.md from the API routes of the backend,
+// and the catalogue of ERRORS.md from backend/lib/errors.js
 import fs from 'fs';
 import path from 'path';
+import { ERRORS, FRONT_ERRORS } from '../backend/lib/errors.js';
 
 const API_DIR = 'backend/app/api';
 const OUTPUT = 'docs/API.md';
@@ -23,7 +25,7 @@ for (const file of findRoutes(API_DIR).sort()) {
   const needsAuth = code.includes('requireUser(') ? 'Oui' : 'Non';
 
   // Finds "// comment" (optional) followed by "export const GET = withErrorHandler("
-  // \r?\n: the route files have CRLF line endings on a Windows checkout
+  // \r?\n: in case a route file still has CRLF line endings (see .gitattributes)
   const regex = /(?:\/\/ (.*)\r?\n)?export const (GET|POST|PUT|DELETE) = /g;
   for (const match of code.matchAll(regex)) {
     rows.push(`| ${match[2]} | \`${url}\` | ${needsAuth} | ${match[1] || ''} |`);
@@ -45,3 +47,28 @@ ${rows.join('\n')}
 fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
 fs.writeFileSync(OUTPUT, content);
 console.log(`${OUTPUT} : ${rows.length} routes`);
+
+// ---------- Catalogue of ERRORS.md, between the two markers ----------
+
+const ERRORS_FILE = 'ERRORS.md';
+const START = '<!-- catalogue:start (généré par npm run docs, ne pas modifier à la main) -->';
+const END = '<!-- catalogue:end -->';
+
+const errorRows = [
+  ...Object.entries(ERRORS).map(([code, { status, title, when }]) => `| \`${code}\` | ${status} | ${title} | ${when} |`),
+  ...Object.entries(FRONT_ERRORS).map(([code, { title, when }]) => `| \`${code}\` | - | ${title} | ${when} |`),
+];
+
+const catalogue = `${START}
+| Code | HTTP | Message affiché | Quand |
+|---|:-:|---|---|
+${errorRows.join('\n')}
+${END}`;
+
+const errorsDoc = fs.readFileSync(ERRORS_FILE, 'utf-8');
+const start = errorsDoc.indexOf(START);
+const end = errorsDoc.indexOf(END);
+if (start === -1 || end === -1) throw new Error(`${ERRORS_FILE}: markers of the catalogue not found`);
+
+fs.writeFileSync(ERRORS_FILE, errorsDoc.slice(0, start) + catalogue + errorsDoc.slice(end + END.length));
+console.log(`${ERRORS_FILE} : ${errorRows.length} codes`);
