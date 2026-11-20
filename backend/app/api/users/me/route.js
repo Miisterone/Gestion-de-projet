@@ -1,4 +1,4 @@
-import { publicUserSelect, requireUser } from '@/lib/auth';
+import { ownUserSelect, requireUser } from '@/lib/auth';
 import { AppError } from '@/lib/errors';
 import { withErrorHandler } from '@/lib/handler';
 import { isNotFound, prisma } from '@/lib/prisma';
@@ -11,7 +11,7 @@ export const PUT = withErrorHandler(async (request) => {
   const data = await parseBody(request, profileSchema);
 
   try {
-    const user = await prisma.user.update({ where: { id: userId }, data, select: publicUserSelect });
+    const user = await prisma.user.update({ where: { id: userId }, data, select: ownUserSelect });
     return Response.json({ user });
   } catch (error) {
     // Account deleted since the token was created

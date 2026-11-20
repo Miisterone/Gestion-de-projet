@@ -2,7 +2,9 @@ import jwt from 'jsonwebtoken';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { getSecret } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { GET as me } from '@/app/api/auth/me/route';
 import { GET as feed, POST as publish } from '@/app/api/posts/route';
+import { GET as profile } from '@/app/api/users/[id]/route';
 import { createUser, request, resetDb } from '../helpers';
 
 beforeEach(resetDb);
@@ -43,5 +45,24 @@ describe('invalid inputs never answer 500', () => {
     const { token } = await createUser();
     const res = await publish(request('/api/posts', { method: 'POST', token, body: ['x'] }));
     expect(res.status).toBe(422);
+  });
+});
+
+describe('email of the users (LL-232)', () => {
+  it('is never sent to other users, only to the owner of the account', async () => {
+    const author = await createUser('Author');
+    const reader = await createUser('Reader');
+    await publish(request('/api/posts', { method: 'POST', token: author.token, body: { content: 'Hello' } }));
+
+    const { posts } = await (await feed(request('/api/posts', { token: reader.token }))).json();
+    expect(posts[0].author).not.toHaveProperty('email');
+
+    const res = await profile(request(`/api/users/${author.user.id}`, { token: reader.token }), {
+      params: { id: author.user.id },
+    });
+    expect((await res.json()).user).not.toHaveProperty('email');
+
+    const own = await (await me(request('/api/auth/me', { token: author.token }))).json();
+    expect(own.user.email).toBe(author.user.email);
   });
 });
