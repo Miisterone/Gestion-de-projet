@@ -16,7 +16,7 @@ Pour installer le projet, voir le [README](README.md#-installation).
 
 ## 🔁 Cycle de vie d'une contribution
 
-1. **Prendre une issue** dans le [Project](https://github.com/users/Miisterone/projects/5) (colonne *À faire*), se l'assigner, la passer *En cours*. Noter son numéro `#<n>` (pour la branche et le `Closes #<n>`) et son identifiant `LL-<id>` (dans le titre, pour le titre de la PR).
+1. **Prendre une issue** dans le [Project](https://github.com/users/Miisterone/projects/5) (colonne *Todo*), se l'assigner, la passer *In Progress*. Noter son numéro `#<n>` (pour la branche et le `Closes #<n>`) et son identifiant `LL-<id>` (dans le titre, pour le titre de la PR).
 2. **Créer sa branche** depuis `develop` à jour :
    ```bash
    git checkout develop
