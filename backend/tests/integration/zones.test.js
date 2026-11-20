@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { GET as listZones } from '@/app/api/zones/route';
 import { POST as register } from '@/app/api/auth/register/route';
 import { GET as profile } from '@/app/api/users/[id]/route';
+import { PUT as editProfile } from '@/app/api/users/me/route';
+import { prisma } from '@/lib/prisma';
 import { createUser, request, resetDb } from '../helpers';
 
 beforeEach(resetDb);
@@ -65,5 +67,25 @@ describe('zones', () => {
     expect(user.zone).toMatchObject({ name: 'Saint-Michel', city: 'Toulouse' });
     expect(Object.keys(user)).not.toContain('address');
     expect(Object.keys(user)).not.toContain('password');
+  });
+
+  it('lets an account without neighbourhood choose one in its profile', async () => {
+    const { token, user } = await createUser('Old');
+    await prisma.user.update({ where: { id: user.id }, data: { zoneId: null } });
+    const { zones } = await (await listZones(request('/api/zones'))).json();
+
+    const res = await editProfile(request('/api/users/me', { method: 'PUT', token, body: { zoneId: zones[0].id } }));
+
+    expect(res.status).toBe(200);
+    expect((await res.json()).user).toMatchObject({ zoneId: zones[0].id, zone: { name: zones[0].name } });
+  });
+
+  it('refuses an unknown neighbourhood in the profile', async () => {
+    const { token } = await createUser('Me');
+
+    const res = await editProfile(request('/api/users/me', { method: 'PUT', token, body: { zoneId: 999999 } }));
+
+    expect(res.status).toBe(404);
+    expect((await res.json()).code).toBe('LL_ZONE_404');
   });
 });

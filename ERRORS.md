@@ -19,32 +19,38 @@ Toutes les erreurs de l'API ont le même format, décidé dans l'EPIC *Error man
 |---|---|
 | `code` | Code métier stable : c'est lui que le front teste, jamais le texte |
 | `title` | Message court affichable à l'utilisateur, sans terme technique |
-| `detail` | Précision sur ce cas (par défaut identique à `title`) |
+| `detail` | Précision sur ce cas (par défaut identique à `title`), jamais un autre sens que le code |
 | `instance` | Route appelée |
 | `traceId` | Identifiant de la requête, aussi renvoyé dans l'en-tête `X-Trace-Id` et écrit dans les logs serveur |
 | `errors` | Erreurs 422 uniquement : une entrée par champ invalide (`field`, `code`, `message`) |
+
+**Un cas que le front doit distinguer a son propre code.** `detail` sert seulement à préciser (ex. quel champ, quelle limite), jamais à changer le sens du code. S'il manque un code, on l'ajoute (voir [Ajouter un code](#ajouter-un-code)) au lieu de détourner un code proche avec `detail`. C'est vérifié en review.
 
 Une exception non prévue renvoie toujours `500 LL_INTERNAL_500`, sans stack trace ni message interne. Le détail est dans les logs serveur, retrouvable avec le `traceId`.
 
 ## Catalogue des codes
 
-Source : [`backend/lib/errors.js`](backend/lib/errors.js).
+Généré depuis [`backend/lib/errors.js`](backend/lib/errors.js) par `npm run docs`. La CI échoue si ce tableau n'est pas à jour.
 
+<!-- catalogue:start (généré par npm run docs, ne pas modifier à la main) -->
 | Code | HTTP | Message affiché | Quand |
 |---|:-:|---|---|
 | `LL_VALIDATION_422` | 422 | Certains champs sont invalides. | Corps absent, JSON illisible ou champ invalide (voir `errors`) |
 | `LL_AUTH_401` | 401 | Votre session a expiré, reconnectez-vous. | Token absent, invalide ou expiré |
 | `LL_LOGIN_401` | 401 | Email ou mot de passe incorrect. | Échec de connexion |
-| `LL_AUTH_403` | 403 | Vous n'avez pas accès à ce contenu. | Action interdite (ex. supprimer la publication d'un autre) |
+| `LL_AUTH_403` | 403 | Vous n'avez pas accès à ce contenu. | Action sur le contenu d'un autre (ex. supprimer la publication d'un autre) |
+| `LL_REPORT_403` | 403 | Vous ne pouvez pas signaler votre propre publication. | Signalement de sa propre publication |
 | `LL_POST_404` | 404 | Cette publication n'existe pas ou n'est plus disponible. | Publication inconnue |
 | `LL_USER_404` | 404 | Cet utilisateur n'existe pas. | Utilisateur inconnu |
-| `LL_EMAIL_409` | 409 | Cet email est déjà utilisé. | Inscription avec un email existant |
 | `LL_ZONE_404` | 404 | Cette zone n'existe pas ou n'est pas encore ouverte. | Zone inconnue |
 | `LL_EVENT_404` | 404 | Cet événement n'existe pas ou a été annulé. | Événement inconnu |
+| `LL_EMAIL_409` | 409 | Cet email est déjà utilisé. | Inscription avec un email existant |
 | `LL_REPORT_409` | 409 | Vous avez déjà signalé ce contenu. | Signalement en double |
+| `LL_PROFILE_ZONE_409` | 409 | Choisissez votre quartier dans votre profil pour continuer. | Action qui demande un quartier (ex. créer un événement) depuis un compte qui n'en a pas |
 | `LL_RATE_429` | 429 | Trop de tentatives, réessayez dans un instant. | Limitation de débit |
 | `LL_INTERNAL_500` | 500 | Une erreur est survenue de notre côté. Réessayez. | Toute exception non prévue |
 | `LL_NETWORK` | - | Connexion perdue. Vérifiez votre réseau. | Côté front uniquement : l'API n'a pas répondu |
+<!-- catalogue:end -->
 
 ### Codes des erreurs de champ (`errors[].code`)
 
@@ -84,6 +90,9 @@ export const POST = withErrorHandler(async (request) => {
 
 ## Ajouter un code
 
-1. L'ajouter dans `ERRORS` de `backend/lib/errors.js` (préfixe `LL_`, suffixe = statut HTTP).
-2. L'ajouter dans le tableau ci-dessus.
+1. L'ajouter dans `ERRORS` de `backend/lib/errors.js` : préfixe `LL_`, ressource ou règle, suffixe = statut HTTP (`LL_REPORT_403`), avec `status`, `title` et `when`.
+2. Lancer `npm run docs` : le tableau ci-dessus est mis à jour.
 3. Le documenter dans les réponses de la route : paramètre `codes` de `route()` dans le fichier de la ressource de `backend/lib/openapi/` (visible sur `/api/docs`).
+4. Ajouter le cas dans `backend/tests/integration/openapi.test.js` : le test vérifie que l'API renvoie bien ce code et que Swagger le documente.
+
+Choisir le statut selon la cause : `403` action interdite pour cet utilisateur, `404` ressource introuvable, `409` conflit avec l'état actuel (doublon, compte incomplet).

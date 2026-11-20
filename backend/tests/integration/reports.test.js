@@ -67,7 +67,7 @@ describe('reports', () => {
     const body = await res.json();
 
     expect(res.status).toBe(403);
-    expect(body).toMatchObject({ code: 'LL_AUTH_403', detail: 'Vous ne pouvez pas signaler votre propre publication.' });
+    expect(body).toMatchObject({ code: 'LL_REPORT_403', detail: 'Vous ne pouvez pas signaler votre propre publication.' });
   });
 
   it('answers 404 for an unknown post', async () => {

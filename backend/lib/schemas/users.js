@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { name } from './fields';
+import { name, zoneId } from './fields';
 
 export const profileSchema = z.object({
   firstName: name('Le prénom').optional(),
@@ -8,4 +8,6 @@ export const profileSchema = z.object({
   avatar: z
     .union([z.literal(''), z.string().trim().url("L'avatar doit être une adresse web.").max(500)])
     .optional(),
+  // Lets the accounts created before the zones choose one (LL_PROFILE_ZONE_409)
+  zoneId: zoneId.optional(),
 });

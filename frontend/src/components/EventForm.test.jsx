@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, api } from '../api';
 import EventForm from './EventForm';
@@ -65,5 +66,26 @@ describe('EventForm', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('La date doit être dans le futur.');
     expect(screen.getByLabelText('Titre')).toHaveValue('Fête des voisins');
+  });
+
+  it('links to the profile when the account has no neighbourhood', async () => {
+    api.mockRejectedValue(
+      new ApiError({
+        code: 'LL_PROFILE_ZONE_409',
+        status: 409,
+        title: 'Choisissez votre quartier dans votre profil pour continuer.',
+      })
+    );
+    render(
+      <MemoryRouter>
+        <EventForm user={{ ...gerard, zoneId: null, zone: null }} onCreated={() => {}} />
+      </MemoryRouter>
+    );
+
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: "Créer l'événement" }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Choisissez votre quartier dans votre profil');
+    expect(screen.getByRole('link', { name: 'Choisir mon quartier' })).toHaveAttribute('href', `/profile/${gerard.id}`);
   });
 });
