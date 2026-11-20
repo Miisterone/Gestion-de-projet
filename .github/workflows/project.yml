@@ -1,10 +1,10 @@
 name: Project
 
-# New issue -> added to the project
-# PR opened -> "In Review", PR merged -> "To Test"
+# New issue -> added to the project, issue closed -> "Done"
+# PR opened -> "In Review", PR merged -> "To Test" (the issue stays open with "Refs #n": the PO closes it after testing)
 on:
   issues:
-    types: [opened]
+    types: [opened, closed]
   pull_request:
     types: [opened, reopened, closed]
 
@@ -13,7 +13,7 @@ env:
 
 jobs:
   add-issue:
-    if: github.event_name == 'issues'
+    if: github.event_name == 'issues' && github.event.action == 'opened'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v1.0.2
@@ -22,7 +22,9 @@ jobs:
           github-token: ${{ secrets.PROJECT_TOKEN }}
 
   status:
-    if: github.event_name == 'pull_request' && (github.event.action != 'closed' || github.event.pull_request.merged)
+    if: >-
+      (github.event_name == 'issues' && github.event.action == 'closed') ||
+      (github.event_name == 'pull_request' && (github.event.action != 'closed' || github.event.pull_request.merged))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,5 +39,6 @@ jobs:
           PROJECT_OWNER: Miisterone
           PROJECT_NUMBER: 5
           REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           BRANCH: ${{ github.head_ref }}
-          STATUS: ${{ github.event.action == 'closed' && 'To Test' || 'In Review' }}
+          STATUS: ${{ github.event_name == 'issues' && 'Done' || (github.event.action == 'closed' && 'To Test' || 'In Review') }}
