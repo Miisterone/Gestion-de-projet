@@ -117,7 +117,7 @@ Branches, commits et PR : voir **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 | [Docker](.github/workflows/docker.yml) | Push sur `main` / `develop`, tag `v*` | Publie les images sur GHCR : `recette` pour `develop`, `latest` pour `main`, version pour les tags |
 | [Docs site](.github/workflows/docs-site.yml) | Push sur `develop` | Publie Storybook et Swagger sur GitHub Pages |
 | [Release](.github/workflows/release.yml) | Tag `v*` | Release GitHub avec les PR classées par label |
-| [Dependabot](.github/dependabot.yml) | Chaque semaine | PR de mise à jour des dépendances |
+| [Dependabot](.github/dependabot.yml) | Chaque semaine | PR de mise à jour des dépendances, suivies par une issue en Backlog (voir [CONTRIBUTING.md](CONTRIBUTING.md#-pr-de-dependabot)) |
 
 Les runs de CI d'une branche sont annulés quand un nouveau commit est poussé, et les builds Docker utilisent un cache.
 

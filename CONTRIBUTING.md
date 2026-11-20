@@ -113,6 +113,21 @@ En review :
 
 **Changer une règle** (convention, CI, modèle de PR...) : la PR est annoncée à toute l'équipe avant sa fusion, et la règle s'applique au sprint suivant. Une règle qui casse la CI des PR en cours (nouvelle vérification) attend la fin du sprint, sauf correctif urgent.
 
+## 🤖 PR de Dependabot
+
+Dependabot ouvre ses PR (`chore: bump <paquet> from <a> to <b>`) sans issue : *PR check* ne les vérifie pas, et elles n'apparaissent pas dans le Project. Pour garder une trace dans le backlog, chaque PR Dependabot a une **issue de suivi** :
+
+1. Chercher une issue de suivi existante (label `dependencies`). Les PR qui touchent les mêmes paquets (`vitest` et `@vitest/*`, `vite` et `@vitejs/*`...) partagent **une seule issue**.
+2. Sinon, créer l'issue avec le modèle *Tâche* :
+   - ce que propose la PR (paquet, versions, fichiers touchés), et si c'est une version majeure ;
+   - si la CI de la PR échoue : le job, l'erreur et sa cause ;
+   - critères *Étant donné / Quand / Alors* (CI verte, `npm test` passe, l'application fonctionne comme avant, PR liées fusionnées ou fermées) ;
+   - cas d'erreur (`Aucun changement` en général) et dépendances.
+3. Labels `infra` et `dependencies`. Dans le Project : Status `Backlog`, Service `Infra`, Persona `Aucun`. Si le workflow *Project* n'a pas ajouté l'issue, l'ajouter à la main : `gh project item-add 5 --owner Miisterone --url <url de l'issue>`.
+4. Commenter la PR Dependabot avec le lien vers l'issue.
+
+Une PR Dependabot fusionnée ou fermée sans suite ferme son issue (avec un lien vers la PR). Si la montée demande du travail (code à adapter, autres paquets à monter), il se fait dans une branche `feature/<n>-<desc>` liée à l'issue, et la PR Dependabot est fermée.
+
 ## 📦 Versions
 
 [Semantic Versioning](https://semver.org/lang/fr/) : `MAJEUR.MINEUR.CORRECTIF`. Les versions sont en `0.x.y` jusqu'au MVP, qui sera la `1.0.0`.
