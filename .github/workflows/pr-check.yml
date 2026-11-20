@@ -13,9 +13,10 @@ jobs:
         env:
           BRANCH: ${{ github.head_ref }}
         run: |
-          regex='^((feature|fix|hotfix)/[A-Za-z0-9._-]+|release/[0-9]+\.[0-9]+\.[0-9]+|develop)$'
+          # The ticket id is mandatory: the Project workflow uses it to update the issue status
+          regex='^((feature|fix|hotfix)/LL-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*|release/[0-9]+\.[0-9]+\.[0-9]+|develop)$'
           if [[ ! "$BRANCH" =~ $regex ]]; then
-            echo "::error::Branch '$BRANCH' must look like feature/xxx, fix/xxx, hotfix/xxx or release/x.y.z"
+            echo "::error::Branch '$BRANCH' must look like feature/LL-<id>-<desc>, fix/LL-<id>-<desc>, hotfix/LL-<id>-<desc> or release/x.y.z (desc in lowercase, words separated by dashes)"
             exit 1
           fi
 

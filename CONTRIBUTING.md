@@ -54,6 +54,8 @@ Nous suivons **GitFlow**.
 - `LL-<id>` = identifiant présent dans le titre de l'issue (ex. `LL-125 Créer le schéma PostgreSQL`).
 - `<desc>` : quelques mots **en anglais**, **en minuscules**, séparés par des **tirets**.
 
+> ⚠️ Le workflow **`PR check`** refuse toute branche `feature/`, `fix/` ou `hotfix/` sans identifiant `LL-<id>` : créer d'abord l'issue, même pour une petite correction de CI ou de doc.
+
 ```text
 feature/LL-12-profile-page
 fix/LL-27-feed-pagination
