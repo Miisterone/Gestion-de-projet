@@ -64,6 +64,16 @@ export const eventSchema = z.object({
     }),
 });
 
+// Reasons of a report, same values as the report_reason enum of the database
+export const REPORT_REASONS = ['abus', 'inapproprie', 'erronee', 'autre'];
+
+export const reportSchema = z.object({
+  postId: z.string(required('La publication')).uuid('La publication est invalide.'),
+  reason: z.enum(REPORT_REASONS, {
+    errorMap: () => ({ message: 'Choisissez un motif de signalement.' }),
+  }),
+});
+
 export const profileSchema = z.object({
   firstName: name('Le prénom').optional(),
   lastName: name('Le nom').optional(),

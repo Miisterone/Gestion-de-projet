@@ -11,6 +11,7 @@ import {
   postSchema,
   profileSchema,
   registerSchema,
+  reportSchema,
 } from './schemas';
 
 extendZodWithOpenApi(z);
@@ -85,6 +86,16 @@ const Event = registry.register(
   })
 );
 
+const Report = registry.register(
+  'Report',
+  z.object({
+    id,
+    postId: id,
+    reason: reportSchema.shape.reason,
+    createdAt: date,
+  })
+);
+
 const Stats = registry.register(
   'UserStats',
   z.object({
@@ -124,6 +135,7 @@ registry.register('PostBody', postSchema);
 registry.register('CommentBody', commentSchema);
 registry.register('EventBody', eventSchema);
 registry.register('ProfileBody', profileSchema);
+registry.register('ReportBody', reportSchema);
 
 // ---------- Helpers ----------
 
@@ -276,6 +288,16 @@ route({
   request: { ...idParam('Identifiant de la publication'), ...body(commentSchema) },
   responses: { 201: ok(z.object({ comment: Comment }), 'Commentaire créé') },
   codes: ['LL_VALIDATION_422', 'LL_POST_404'],
+});
+
+route({
+  method: 'post',
+  path: '/api/reports',
+  tags: ['Signalements'],
+  summary: "Signaler la publication d'un voisin",
+  request: body(reportSchema),
+  responses: { 201: ok(z.object({ report: Report }), 'Signalement enregistré') },
+  codes: ['LL_VALIDATION_422', 'LL_AUTH_403', 'LL_POST_404', 'LL_REPORT_409'],
 });
 
 route({

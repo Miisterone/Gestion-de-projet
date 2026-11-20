@@ -172,9 +172,52 @@ button:disabled {
 
 .post-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   padding-top: 10px;
   border-top: 1px solid #eee;
+}
+
+/* Report */
+.report-toggle,
+.report-done {
+  margin-left: auto;
+}
+
+.report-done {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #65676b;
+  font-size: 14px;
+}
+
+.report-panel {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-panel fieldset {
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.report-panel legend {
+  font-weight: bold;
+}
+
+.report-reason {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.report-reason input {
+  width: auto;
 }
 
 .liked {

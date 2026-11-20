@@ -5,7 +5,7 @@ import { POST as register } from '@/app/api/auth/register/route';
 // Empties every table between two tests
 export async function resetDb() {
   await prisma.$executeRawUnsafe(
-    'truncate table events, likes, comments, posts, users restart identity cascade'
+    'truncate table reports, events, likes, comments, posts, users restart identity cascade'
   );
 }
 

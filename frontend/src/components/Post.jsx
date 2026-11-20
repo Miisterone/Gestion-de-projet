@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
 import Avatar from './Avatar';
+import ReportButton from './ReportButton';
 
 function formatDate(date) {
   return new Date(date).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
@@ -71,6 +72,7 @@ export default function Post({ post, user, onDeleted }) {
         <button className="btn-light" onClick={toggleComments}>
           💬 Commentaires ({commentsCount})
         </button>
+        {post.author?.id !== user.id && <ReportButton postId={post.id} />}
       </div>
 
       {comments && (

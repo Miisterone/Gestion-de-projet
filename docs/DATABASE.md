@@ -30,6 +30,8 @@ erDiagram
     posts ||--o{ likes : recoit
     users ||--o{ events : organise
     zones ||--o{ events : accueille
+    users ||--o{ reports : signale
+    posts ||--o{ reports : recoit
 ```
 
 ## Dictionnaire des données
@@ -103,6 +105,18 @@ La clé primaire composée garantit un seul like par utilisateur et par publicat
 | created_at | timestamptz | non nul, défaut `now()` | Date de création |
 
 Index sur (zone_id, starts_at) : la liste d'un quartier ne montre que les événements à venir, du plus proche au plus lointain.
+
+### reports
+
+| Colonne | Type | Contraintes | Description |
+|---|---|---|---|
+| id | uuid | PK | Identifiant |
+| post_id | uuid | FK posts, cascade | Publication signalée |
+| reporter_id | uuid | FK users, cascade, indexé | Utilisateur qui signale |
+| reason | report_reason | non nul | Motif : `abus`, `inapproprie`, `erronee` ou `autre` |
+| created_at | timestamptz | non nul, défaut `now()` | Date du signalement |
+
+Unicité sur (post_id, reporter_id) : un utilisateur ne signale qu'une fois la même publication (`LL_REPORT_409` sinon). Le traitement des signalements (statut, rôle modérateur) arrive avec la modération (LL-225).
 
 > Le module Amis a été retiré (LL-235) et les notifications sont reportées en V2 : les tables `friend_requests` et `notifications` sont supprimées par la migration `remove_friends_notifications`.
 

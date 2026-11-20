@@ -22,6 +22,7 @@ Les erreurs suivent le format `application/problem+json` décrit dans [ERRORS.md
 | DELETE | `/api/posts/[id]` | Oui | Delete one of my posts |
 | GET | `/api/posts` | Oui | Feed, 10 posts per page (?page=1) |
 | POST | `/api/posts` | Oui | Publish a post |
+| POST | `/api/reports` | Oui | Report the post of a neighbour, once per post |
 | GET | `/api/users/[id]` | Oui | Profile of a user with their posts |
 | GET | `/api/users/[id]/stats` | Oui | Statistics of a user: posts, likes and comments received, current streak |
 | PUT | `/api/users/me` | Oui | Edit my profile |

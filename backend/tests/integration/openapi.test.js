@@ -7,6 +7,7 @@ import { buildOpenApiDocument } from "@/lib/openapi";
 import { prisma } from "@/lib/prisma";
 import * as events from "@/app/api/events/route";
 import * as posts from "@/app/api/posts/route";
+import * as reports from "@/app/api/reports/route";
 import * as post from "@/app/api/posts/[id]/route";
 import * as like from "@/app/api/posts/[id]/like/route";
 import * as comments from "@/app/api/posts/[id]/comments/route";
@@ -151,6 +152,62 @@ describe("errors sent by the API are the documented ones", () => {
           id(c.post.id),
         ),
       "LL_VALIDATION_422",
+    ],
+    [
+      "post",
+      "/api/reports",
+      (c) =>
+        reports.POST(
+          request("/api/reports", {
+            method: "POST",
+            token: c.other.token,
+            body: { postId: c.post.id },
+          }),
+        ),
+      "LL_VALIDATION_422",
+    ],
+    [
+      "post",
+      "/api/reports",
+      (c) =>
+        reports.POST(
+          request("/api/reports", {
+            method: "POST",
+            token: c.author.token,
+            body: { postId: c.post.id, reason: "abus" },
+          }),
+        ),
+      "LL_AUTH_403",
+    ],
+    [
+      "post",
+      "/api/reports",
+      (c) =>
+        reports.POST(
+          request("/api/reports", {
+            method: "POST",
+            token: c.other.token,
+            body: { postId: UNKNOWN, reason: "abus" },
+          }),
+        ),
+      "LL_POST_404",
+    ],
+    [
+      "post",
+      "/api/reports",
+      async (c) => {
+        const send = () =>
+          reports.POST(
+            request("/api/reports", {
+              method: "POST",
+              token: c.other.token,
+              body: { postId: c.post.id, reason: "abus" },
+            }),
+          );
+        await send();
+        return send();
+      },
+      "LL_REPORT_409",
     ],
     [
       "get",

@@ -38,6 +38,7 @@ model User {
   comments Comment[]
   likes    Like[]
   events   Event[]
+  reports  Report[]
 
   @@map("users")
 }
@@ -51,6 +52,7 @@ model Post {
   author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments Comment[]
   likes    Like[]
+  reports  Report[]
 
   @@index([authorId])
   @@index([createdAt])
@@ -102,4 +104,30 @@ model Event {
 
   @@index([zoneId, startsAt])
   @@map("events")
+}
+
+// Reasons a user can choose when reporting a post
+enum ReportReason {
+  abus
+  inapproprie
+  erronee
+  autre
+
+  @@map("report_reason")
+}
+
+// Report of a post by a user, handled later by the moderators (LL-225). One report per user and per post.
+model Report {
+  id         String       @id @default(uuid()) @db.Uuid
+  postId     String       @map("post_id") @db.Uuid
+  reporterId String       @map("reporter_id") @db.Uuid
+  reason     ReportReason
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  post     Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, reporterId])
+  @@index([reporterId])
+  @@map("reports")
 }
