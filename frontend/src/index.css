@@ -168,6 +168,7 @@ button:disabled {
 
 .post-content {
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .post-actions {
