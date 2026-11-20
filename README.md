@@ -8,9 +8,10 @@ Réseau social de quartier : on suit son quartier, on y publie et on y découvre
 
 Projet de groupe. Les tickets sont des **issues** du dépôt, suivies dans le GitHub Project :
 
-- une EPIC est une issue avec le label `epic`, ses tâches front et back sont des sous-issues ;
-- chaque issue a un identifiant `LL-<id>` dans son titre ;
-- le champ **Sprint** range les issues par sprint, les dépendances sont des liens *Blocked by*.
+- une EPIC est une issue avec le label `epic`, ses US et tâches sont des sous-issues ;
+- une issue est désignée par son numéro `#<n>`, repris dans le nom de branche ;
+- champs du Project : **Sprint** (sprint prévu), **Estimate** (en jours/homme), **Priority** (`P0` MVP indispensable, `P1` MVP, `V2` après le MVP), **Persona** et **Service** ;
+- les dépendances sont des liens *Blocked by*.
 
 | Rôle | Responsabilité |
 |---|---|
@@ -98,12 +99,14 @@ flowchart LR
 
 | Statut | Qui | Déclencheur |
 |---|---|---|
-| **Backlog** | PO | Issue créée (ajoutée au Project automatiquement 🤖) |
-| **Todo** | Équipe | Choisie en sprint planning, si elle respecte la [Definition of Ready](CONTRIBUTING.md#-sprint) |
-| **In Progress** | Dev | Branche `feature/<n>-<desc>` créée |
+| **Backlog** | PO | Issue créée (ajoutée au Project automatiquement 🤖). Elle peut déjà avoir un sprint prévu |
+| **Todo** | Équipe | Choisie en sprint planning pour le sprint en cours, si elle respecte la [Definition of Ready](CONTRIBUTING.md#-sprint) |
+| **In Progress** | Dev | Issue assignée, branche `feature/<n>-<desc>` créée |
 | **In Review** | 🤖 | PR ouverte vers `develop` |
-| **To Test** | 🤖 | PR fusionnée, recette par le PO |
-| **Done** | 🤖 | Issue fermée |
+| **To Test** | 🤖 | PR fusionnée (`Refs #<n>` : l'issue reste ouverte), recette par le PO |
+| **Done** | 🤖 | Le PO ferme l'issue après la recette |
+
+Ce cycle est celui des **tâches**. Les EPIC et US ne passent pas par *Todo* ni *In Review* : *Backlog*, puis *In Progress* quand leur première tâche commence, puis *Done* quand toutes leurs tâches sont fermées (voir [CONTRIBUTING.md](CONTRIBUTING.md#-sprint)).
 
 Branches, commits et PR : voir **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
@@ -113,7 +116,7 @@ Branches, commits et PR : voir **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 |---|---|---|
 | [CI](.github/workflows/ci.yml) | PR, push sur `main` / `develop` | Doc de l'API et catalogue d'erreurs à jour, tests Vitest, build Storybook, tests E2E |
 | [PR check](.github/workflows/pr-check.yml) | PR ouverte ou modifiée | Vérifie le nom de branche et le titre, ajoute les labels `frontend` / `backend` / `infra` / `documentation` |
-| [Project](.github/workflows/project.yml) | Issue créée, PR ouverte / fusionnée | Ajoute l'issue au Project, met à jour son statut grâce au numéro dans la branche |
+| [Project](.github/workflows/project.yml) | Issue créée / fermée, PR ouverte / fusionnée | Ajoute l'issue au Project, la passe en *Done* à sa fermeture, met à jour son statut grâce au numéro dans la branche |
 | [Docker](.github/workflows/docker.yml) | Push sur `main` / `develop`, tag `v*` | Publie les images sur GHCR : `recette` pour `develop`, `latest` pour `main`, version pour les tags |
 | [Docs site](.github/workflows/docs-site.yml) | Push sur `develop` | Publie Storybook et Swagger sur GitHub Pages |
 | [Release](.github/workflows/release.yml) | Tag `v*` | Release GitHub avec les PR classées par label |
@@ -126,7 +129,7 @@ Les runs de CI d'une branche sont annulés quand un nouveau commit est poussé, 
 
 1. Créer un token *classic* avec les scopes `repo` et `project`, puis l'ajouter en secret Actions sous le nom `PROJECT_TOKEN`.
 2. Dans le Project, le champ **Status** doit avoir les options `Backlog`, `Todo`, `In Progress`, `In Review`, `To Test`, `Done` (noms exacts, utilisés par le workflow *Project*).
-3. Activer le workflow intégré *Item closed → Done*.
+3. Désactiver les workflows intégrés du Project qui changent le statut (*Item closed*, *Pull request merged*...) : le workflow *Project* s'en charge, et deux automatisations sur le même champ se contredisent.
 
 Le nom du champ se change en haut de [project-status.mjs](.github/scripts/project-status.mjs).
 </details>
@@ -135,7 +138,8 @@ Le nom du champ se change en haut de [project-status.mjs](.github/scripts/projec
 
 | Document | Contenu |
 |---|---|
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, PR, versions, Swagger, Storybook |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, PR, sprint, versions, Swagger, Storybook |
+| [docs/SPRINTS.md](docs/SPRINTS.md) | Objectif et rétro de chaque sprint |
 | [ERRORS.md](ERRORS.md) | Format des erreurs de l'API et catalogue des codes |
 | [docs/API.md](docs/API.md) | Liste des routes (générée) |
 | [docs/DATABASE.md](docs/DATABASE.md) | Schéma, dictionnaire des données, migrations |

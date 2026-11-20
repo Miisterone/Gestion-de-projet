@@ -1,8 +1,7 @@
-// Updates the "Status" of the issue linked to the branch:
-//   feature/12-xxx     -> issue #12 (format required by PR check)
-//   feature/LL-125-xxx -> issue whose title contains LL-125 (old branches)
-// in the GitHub Project (https://github.com/users/Miisterone/projects/5).
-const { PROJECT_TOKEN, PROJECT_OWNER, PROJECT_NUMBER, REPOSITORY, BRANCH, STATUS } = process.env;
+// Updates the "Status" of an issue in the GitHub Project (https://github.com/users/Miisterone/projects/5):
+//   ISSUE_NUMBER set (issue event)  -> that issue
+//   otherwise, branch feature/12-xxx -> issue #12 (format required by PR check)
+const { PROJECT_TOKEN, PROJECT_OWNER, PROJECT_NUMBER, REPOSITORY, ISSUE_NUMBER, BRANCH, STATUS } = process.env;
 
 // Name of the single-select field in the project
 const STATUS_FIELD = 'Status';
@@ -13,27 +12,10 @@ if (!PROJECT_TOKEN) {
 }
 
 const [owner, repo] = REPOSITORY.split('/');
-const ticket = BRANCH.match(/^(?:feature|fix|hotfix)\/(LL-\d+|\d+)-/i)?.[1]?.toUpperCase();
-if (!ticket) {
-  console.log(`No ticket in branch "${BRANCH}"`);
+const issueNumber = Number(ISSUE_NUMBER || BRANCH?.match(/^(?:feature|fix|hotfix)\/(\d+)-/)?.[1]);
+if (!issueNumber) {
+  console.log(`No issue number in branch "${BRANCH}"`);
   process.exit(0);
-}
-
-let issueNumber = Number(ticket);
-if (ticket.startsWith('LL-')) {
-  const pattern = new RegExp(`\\b${ticket}\\b`);
-  for (let page = 1; !issueNumber; page++) {
-    const res = await fetch(`https://api.github.com/repos/${REPOSITORY}/issues?state=all&per_page=100&page=${page}`, {
-      headers: { Authorization: `Bearer ${PROJECT_TOKEN}` },
-    });
-    const list = await res.json();
-    issueNumber = list.find((i) => !i.pull_request && pattern.test(i.title))?.number;
-    if (list.length < 100) break;
-  }
-  if (!issueNumber) {
-    console.log(`No issue titled with ${ticket}`);
-    process.exit(0);
-  }
 }
 
 async function graphql(query, variables) {

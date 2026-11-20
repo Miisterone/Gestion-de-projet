@@ -1,7 +1,7 @@
 name: Docker
 
 # Builds the images and pushes them on GitHub Container Registry
-# On develop: builds and tags 'recette' for staging deployment [LL-206]
+# On develop: builds and tags 'recette' for staging deployment (#151)
 # On main: builds production images
 on:
   push:

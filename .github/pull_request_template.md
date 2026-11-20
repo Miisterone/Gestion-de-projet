@@ -1,6 +1,8 @@
 ## Issue
 
-Closes #<!-- numéro de l'issue -->
+Refs #<!-- numéro de l'issue -->
+
+<!-- « Refs », pas « Closes » : l'issue reste ouverte en To Test, le PO la ferme après la recette. -->
 
 ## Description
 
@@ -13,7 +15,7 @@ Closes #<!-- numéro de l'issue -->
 ## Checklist
 
 - [ ] Branche `feature/<n>-…` ou `fix/<n>-…` créée depuis `develop` à jour
-- [ ] Titre au format Conventional Commits, `[LL-xxx]` à la fin (voir [CONTRIBUTING](https://github.com/Miisterone/Gestion-de-projet/blob/develop/CONTRIBUTING.md#-commits-et-titres-de-pr))
+- [ ] Titre au format Conventional Commits (voir [CONTRIBUTING](https://github.com/Miisterone/Gestion-de-projet/blob/develop/CONTRIBUTING.md#-commits-et-titres-de-pr))
 - [ ] `npm test` passe en local
 - [ ] Rendu vérifié en **800×600** (Storybook ou E2E), sans défilement horizontal
 - [ ] Composant modifié : story à jour

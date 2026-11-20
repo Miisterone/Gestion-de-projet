@@ -116,7 +116,7 @@ Index sur (zone_id, starts_at) : la liste d'un quartier ne montre que les évén
 | reason | report_reason | non nul | Motif : `abus`, `inapproprie`, `erronee` ou `autre` |
 | created_at | timestamptz | non nul, défaut `now()` | Date du signalement |
 
-Unicité sur (post_id, reporter_id) : un utilisateur ne signale qu'une fois la même publication (`LL_REPORT_409` sinon). Le traitement des signalements (statut, rôle modérateur) arrive avec la modération (LL-225).
+Unicité sur (post_id, reporter_id) : un utilisateur ne signale qu'une fois la même publication (`LL_REPORT_409` sinon). Le traitement des signalements (statut, rôle modérateur) arrive avec la modération (#42).
 
 ## Modifier le schéma
 
