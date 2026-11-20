@@ -31,7 +31,7 @@ Projet de groupe : concevoir **LocalLoop**, un réseau social local centré sur 
 | **Dev Back** | API Next.js, base de données, sécurité |
 | **Dev Front** | Interface React, intégration de l'API |
 
-La gestion de projet se fait sur **[GitHub Projects](https://github.com/users/Miisterone/projects/5)** : chaque ticket est une **issue** du dépôt. Une EPIC est une issue (label `epic`) dont les tâches front et back sont des **sous-issues**. Chaque issue a un identifiant **`LL-<id>`** dans son titre, repris dans le nom des branches. Le champ **Sprint** du Project range les issues par sprint, les dépendances sont des liens *Blocked by* entre issues.
+La gestion de projet se fait sur **[GitHub Projects](https://github.com/users/Miisterone/projects/5)** : chaque ticket est une **issue** du dépôt. Une EPIC est une issue (label `epic`) dont les tâches front et back sont des **sous-issues**. Chaque issue a un identifiant **`LL-<id>`** dans son titre, repris dans le titre des PR ; le nom des branches reprend le **numéro de l'issue**. Le champ **Sprint** du Project range les issues par sprint, les dépendances sont des liens *Blocked by* entre issues.
 
 Colonnes du board (champ **Status**) : **Backlog → À faire → En cours → En review → À tester → Terminé**.
 
@@ -131,20 +131,20 @@ Nous suivons **GitFlow** : deux branches permanentes (`main`, `develop`) et des 
 |---|---|---|---|
 | `main` | Versions stables livrées, taguées | — | — |
 | `develop` | Intégration des fonctionnalités du sprint | `main` | — |
-| `feature/LL-<id>-<desc>` | Une fonctionnalité = une issue | `develop` | `develop` |
-| `fix/LL-<id>-<desc>` | Correction pendant le développement | `develop` | `develop` |
+| `feature/<n>-<desc>` | Une fonctionnalité = une issue | `develop` | `develop` |
+| `fix/<n>-<desc>` | Correction pendant le développement | `develop` | `develop` |
 | `release/x.y.z` | Stabilisation d'une version | `develop` | `main` + `develop` |
-| `hotfix/LL-<id>-<desc>` | Correctif urgent en production | `main` | `main` + `develop` |
+| `hotfix/<n>-<desc>` | Correctif urgent en production | `main` | `main` + `develop` |
 
 ```mermaid
 gitGraph
     commit id: "init"
     branch develop
     checkout develop
-    branch feature/LL-7-login-page
-    commit id: "feat(frontend): login page"
+    branch feature/88-profile-page
+    commit id: "feat(frontend): profile page"
     checkout develop
-    merge feature/LL-7-login-page
+    merge feature/88-profile-page
     branch release/0.1.0
     commit id: "chore: bump version"
     checkout main
@@ -174,7 +174,7 @@ flowchart LR
 |---|---|---|
 | **Backlog** | PO | Crée le ticket, le rattache à son EPIC |
 | **À faire** | Équipe | Ticket choisi en sprint planning |
-| **En cours** | Dev | Crée sa branche `feature/LL-<id>-<desc>` |
+| **En cours** | Dev | Crée sa branche `feature/<n>-<desc>` (`<n>` = numéro de l'issue) |
 | **En review** | Dev | Ouvre la PR vers `develop` 🤖 |
 | **À tester** | PO | PR fusionnée, le PO vérifie 🤖 |
 | **Terminé** | PO | Validé |
@@ -189,7 +189,7 @@ Toutes les automatisations sont des workflows GitHub Actions dans [.github/workf
 |---|---|---|
 | [CI](.github/workflows/ci.yml) | Chaque PR et push sur `main` / `develop` | Vérifie que la doc de l'API est à jour |
 | [PR check](.github/workflows/pr-check.yml) | Ouverture / modification d'une PR | Vérifie le nom de la branche et le titre (Conventional Commits), ajoute les labels `frontend` / `backend` / `infra` / `documentation` |
-| [Project](.github/workflows/project.yml) | Issue créée, PR ouverte / mergée | Ajoute l'issue au Project, puis passe l'issue `LL-<id>` de la branche en **En review** puis **À tester** |
+| [Project](.github/workflows/project.yml) | Issue créée, PR ouverte / mergée | Ajoute l'issue au Project, puis passe l'issue dont le numéro est dans la branche en **En review** puis **À tester** |
 | [Docker](.github/workflows/docker.yml) | Push sur `main` / `develop` ou tag `v*` | Build les images front et back et les publie sur GitHub Container Registry (tag `recette` et environnement GitHub *recette* sur `develop`) |
 | [Release](.github/workflows/release.yml) | Tag `v*` | Crée la release GitHub avec la liste des PR, classées par label |
 | [Dependabot](.github/dependabot.yml) | Chaque semaine | Ouvre des PR pour mettre à jour les dépendances |
