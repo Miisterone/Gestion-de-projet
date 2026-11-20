@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { buildOpenApiDocument } from './openapi';
+import { buildOpenApiDocument } from '.';
 
-const API_DIR = path.join(__dirname, '..', 'app', 'api');
+const API_DIR = path.join(__dirname, '..', '..', 'app', 'api');
 
 // Every "export const GET = ..." of app/api, as "get /api/posts/{id}"
 function routesInCode(dir = API_DIR) {
