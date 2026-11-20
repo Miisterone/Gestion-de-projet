@@ -25,7 +25,7 @@ for (const file of findRoutes(API_DIR).sort()) {
   const needsAuth = code.includes('requireUser(') ? 'Oui' : 'Non';
 
   // Finds "// comment" (optional) followed by "export const GET = withErrorHandler("
-  // \r?\n: the route files have CRLF line endings on a Windows checkout
+  // \r?\n: in case a route file still has CRLF line endings (see .gitattributes)
   const regex = /(?:\/\/ (.*)\r?\n)?export const (GET|POST|PUT|DELETE) = /g;
   for (const match of code.matchAll(regex)) {
     rows.push(`| ${match[2]} | \`${url}\` | ${needsAuth} | ${match[1] || ''} |`);
