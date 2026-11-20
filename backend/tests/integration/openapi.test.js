@@ -177,7 +177,7 @@ describe("errors sent by the API are the documented ones", () => {
             body: { postId: c.post.id, reason: "abus" },
           }),
         ),
-      "LL_AUTH_403",
+      "LL_REPORT_403",
     ],
     [
       "post",
@@ -250,7 +250,7 @@ describe("errors sent by the API are the documented ones", () => {
           }),
         );
       },
-      "LL_ZONE_404",
+      "LL_PROFILE_ZONE_409",
     ],
     [
       "get",
@@ -276,6 +276,19 @@ describe("errors sent by the API are the documented ones", () => {
           }),
         ),
       "LL_VALIDATION_422",
+    ],
+    [
+      "put",
+      "/api/users/me",
+      (c) =>
+        me.PUT(
+          request("/", {
+            method: "PUT",
+            token: c.author.token,
+            body: { zoneId: 999999 },
+          }),
+        ),
+      "LL_ZONE_404",
     ],
     [
       "post",

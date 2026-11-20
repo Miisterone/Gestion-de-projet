@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api';
 
 const EMPTY = { title: '', description: '', place: '', startsAt: '' };
@@ -14,6 +15,8 @@ function nowForInput() {
 export default function EventForm({ user, onCreated }) {
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState('');
+  // Account without neighbourhood (LL_PROFILE_ZONE_409): the fix is in the profile
+  const [needsZone, setNeedsZone] = useState(false);
   const [sending, setSending] = useState(false);
 
   function handleChange(e) {
@@ -23,6 +26,7 @@ export default function EventForm({ user, onCreated }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setNeedsZone(false);
     setSending(true);
     try {
       // datetime-local gives a local time without offset: the API expects an ISO date
@@ -32,6 +36,7 @@ export default function EventForm({ user, onCreated }) {
       setForm(EMPTY);
     } catch (err) {
       setError(err.message);
+      setNeedsZone(err.code === 'LL_PROFILE_ZONE_409');
     } finally {
       setSending(false);
     }
@@ -87,6 +92,12 @@ export default function EventForm({ user, onCreated }) {
       {error && (
         <p className="error" role="alert">
           {error}
+          {needsZone && (
+            <>
+              {' '}
+              <Link to={`/profile/${user.id}`}>Choisir mon quartier</Link>
+            </>
+          )}
         </p>
       )}
       <button type="submit" disabled={!complete || sending}>

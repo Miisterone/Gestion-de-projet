@@ -28,10 +28,10 @@ route({
   method: 'put',
   path: '/api/users/me',
   tags: ['Utilisateurs'],
-  summary: 'Modifier mon profil',
+  summary: 'Modifier mon profil (dont mon quartier)',
   request: body(profileSchema),
   responses: { 200: ok(z.object({ user: OwnUser })) },
-  codes: ['LL_VALIDATION_422'],
+  codes: ['LL_VALIDATION_422', 'LL_ZONE_404'],
 });
 
 route({

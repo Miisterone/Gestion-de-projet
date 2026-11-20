@@ -12,9 +12,7 @@ export const POST = withErrorHandler(async (request) => {
   const { postId, reason } = await parseBody(request, reportSchema);
 
   const post = await requirePost(postId);
-  if (post.authorId === userId) {
-    throw new AppError('LL_AUTH_403', { detail: 'Vous ne pouvez pas signaler votre propre publication.' });
-  }
+  if (post.authorId === userId) throw new AppError('LL_REPORT_403');
 
   let report;
   try {

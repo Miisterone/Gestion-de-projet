@@ -35,5 +35,5 @@ route({
   summary: 'Créer un événement dans mon quartier',
   request: body(eventSchema),
   responses: { 201: ok(z.object({ event: Event }), 'Événement créé') },
-  codes: ['LL_VALIDATION_422', 'LL_ZONE_404'],
+  codes: ['LL_VALIDATION_422', 'LL_PROFILE_ZONE_409'],
 });

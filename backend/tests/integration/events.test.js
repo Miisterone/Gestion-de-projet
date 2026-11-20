@@ -133,7 +133,7 @@ describe('events', () => {
     expect(page2.hasMore).toBe(false);
   });
 
-  it('handles an account without neighbourhood: empty list, LL_ZONE_404 on creation', async () => {
+  it('handles an account without neighbourhood: empty list, 409 LL_PROFILE_ZONE_409 on creation', async () => {
     const { token, user } = await createUser();
     await prisma.user.update({ where: { id: user.id }, data: { zoneId: null } });
 
@@ -141,7 +141,7 @@ describe('events', () => {
     const created = await createEvent(token);
 
     expect(listed).toEqual({ events: [], hasMore: false });
-    expect(created.status).toBe(404);
-    expect((await created.json()).code).toBe('LL_ZONE_404');
+    expect(created.status).toBe(409);
+    expect((await created.json()).code).toBe('LL_PROFILE_ZONE_409');
   });
 });

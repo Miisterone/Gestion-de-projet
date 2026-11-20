@@ -4,6 +4,7 @@ import { api } from '../api';
 import Avatar from '../components/Avatar';
 import Post from '../components/Post';
 import StatsCard from '../components/profile/StatsCard';
+import ZoneSelect from '../components/ZoneSelect';
 
 export default function Profile({ user, setUser }) {
   const { id } = useParams();
@@ -13,6 +14,9 @@ export default function Profile({ user, setUser }) {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
   const [error, setError] = useState('');
+  const [saveError, setSaveError] = useState('');
+  const [zones, setZones] = useState([]);
+  const [zonesError, setZonesError] = useState('');
   const [stats, setStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [statsError, setStatsError] = useState(null);
@@ -51,16 +55,31 @@ export default function Profile({ user, setUser }) {
       lastName: profile.lastName,
       bio: profile.bio,
       avatar: profile.avatar,
+      zoneId: profile.zoneId,
     });
+    setSaveError('');
     setEditing(true);
+
+    // The neighbourhood can be chosen here, for the accounts created before the zones
+    setZonesError('');
+    api('/zones')
+      .then((data) => setZones(data.zones))
+      .catch(() => setZonesError('Impossible de charger les quartiers. Réessayez dans un instant.'));
   }
 
   async function handleSave(e) {
     e.preventDefault();
-    const data = await api('/users/me', { method: 'PUT', body: form });
-    setProfile(data.user);
-    setUser(data.user);
-    setEditing(false);
+    setSaveError('');
+    // null: no neighbourhood chosen yet, the field is not sent
+    const { zoneId, ...fields } = form;
+    try {
+      const data = await api('/users/me', { method: 'PUT', body: zoneId ? { ...fields, zoneId } : fields });
+      setProfile(data.user);
+      setUser(data.user);
+      setEditing(false);
+    } catch (err) {
+      setSaveError(err.message);
+    }
   }
 
   if (error) return <p className="error center">{error}</p>;
@@ -114,6 +133,19 @@ export default function Profile({ user, setUser }) {
             value={form.avatar}
             onChange={(e) => setForm({ ...form, avatar: e.target.value })}
           />
+          <ZoneSelect
+            zones={zones}
+            value={form.zoneId}
+            onChange={(zoneId) => setForm({ ...form, zoneId })}
+            isLoading={!zonesError && zones.length === 0}
+            error={zonesError}
+            required={false}
+          />
+          {saveError && (
+            <p className="error" role="alert">
+              {saveError}
+            </p>
+          )}
           <div className="row">
             <button type="submit">Enregistrer</button>
             <button type="button" className="btn-light" onClick={() => setEditing(false)}>
